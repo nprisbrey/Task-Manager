@@ -22,9 +22,11 @@ def updateDict(person, diff, dur, pDict):
 	#Make sure that person is a list
 	if isinstance(person, str):
 		person = [person]
+
 	for p in person:
 		#Logic for finding out how hard a task is: (duration/10 minutes) * difficulty + random integer if the task requires more than one person
 		pDict[p] = (dur//10) * diff + random.randint(-(len(person)-1),len(person)-1)
+
 	#Subtract from each value in the priorityDict. Have to update this way due to pDict being passed by value
 	subtractionUpdate = 1
 	for key in pDict.keys():
@@ -33,6 +35,7 @@ def updateDict(person, diff, dur, pDict):
 #Helper function to assign people to a list of tasks and update priorityDict
 def assignPeople(tasks, pDict, peopleList):
 	assignedTasks = []
+
 	for task in tasks:
 		#Assertion
 		if task[3].count(":") != 1 or not task[3].replace(":","").isdigit():
@@ -60,60 +63,84 @@ def assignPeople(tasks, pDict, peopleList):
 		except:
 			print("ERROR: The number of people for the '" + task[0] + "' task can't be converted to an integer.")
 			quit()
+
+		#Get the people to assign to the task
 		peopleAssigned = nextPerson(pDict,numPeople)
+
+		#Save the assigned people along with the task
 		assignedTasks.append([peopleAssigned,task])
+
+		#Update everyone's priority values in the priorityDict
 		updateDict(peopleAssigned,difficulty,duration,pDict)
+
 	return assignedTasks
 
 #Initialize people
 with open(PERSON_DATA, "r") as peopleFile:
 	people = [person.strip() for person in peopleFile.readlines()]
+
 	#Get rid of empty/blank lines
 	while "" in people:
 		people.remove("")
 
 #Initialize priorityDict
 if os.path.exists(DICT_DATA):
-        #Read in the last dictionary state from DICT_DATA
+    #Read in the last dictionary state from DICT_DATA
 	with open(DICT_DATA, "r") as dictFile:
 		priorityDict = eval(dictFile.readline())
+
 	#Assertion that the same people are still here
 	if sorted(priorityDict.keys()) != sorted(people):
 		print("Hmmm... It looks like the '" + PERSON_DATA + "' file has been edited since the last run. We'll recreate everyone's priorities real quick with the new people.")
 		priorityDict = initPDict(people)
 else:
+	#Make the priorityDict again with initial values
 	priorityDict = initPDict(people)
 
 #Initialize taskDict
 taskDict = {}
 for day in TASK_DAYS:
 	filePath = os.path.join(TASK_FOLDER, day + ".csv")
+
 	#Assertion that the day's file exists
 	if not os.path.exists(filePath):
 		print("ERROR: It looks like the task file '" + filePath + "' doesn't exists. Please either create the file with tasks or remove the day from the 'TASK_DAYS' variable in the Python program.")
 		quit()
+
 	with open(filePath, "r") as taskFile:
+		#Read in the lines and strip off leading and trailing whitespace
 		lines = [line.strip() for line in taskFile.readlines()]
+
 		#Remove blank/empty lines
 		while "" in lines:
 			lines.remove("")
+
 		tasks = []
 		for line in lines:
 			#Assertion that there are 4 commas
 			if line.count(",") != 4:
 				print("ERROR: Line '" + line + "' in file '" + filePath + "' probably isn't in the right format due to more or less than 4 commas present.")
 				quit()
+
 			tasks.append(line.split(","))
+
 		taskDict[day] = tasks
 		
 #Generate schedule and write it to a file
 with open(OUTPUT_FILE, "w") as outputFile:
+	#Write the header
 	outputFile.write("DAY,TIME,TASK NAME,PEOPLE ASSIGNED,EXPECTED DURATION,DIFFICULTY\n")
+
 	for day in TASK_DAYS:
+		#Write the name of the day
 		outputFile.write(day.upper()+",,,\n")
+
 		dayTasks = assignPeople(taskDict[day],priorityDict,people)
+
 		#Sort the tasks by the timestamp
 		dayTasks = sorted(dayTasks, key=lambda item: int(item[1][3].replace(":","")))
+
+		#Write each task to the file
 		for task in dayTasks:
 			outputFile.write(day + "," + task[1][3] + "," + task[1][0] + "," + ";".join(task[0]) + "," + task[1][1] + " mins," + task[1][2] + "\n")
 
