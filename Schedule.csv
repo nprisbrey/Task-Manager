@@ -1,0 +1,25 @@
+DAY,TIME,TASK NAME,PEOPLE ASSIGNED,EXPECTED DURATION,DIFFICULTY
+SUNDAY,,,
+Sunday,00:00,Task 2,Jamie;Luke;Josie;Johnny,10 mins,2
+Sunday,5:34,Task 3,Johnny;Josie,45 mins,5
+Sunday,14:23,Task 1,Jake,102 mins,3
+MONDAY,,,
+Monday,00:00,Task 2,Luke;Johnny;Josie;Jake,10 mins,2
+Monday,5:34,Task 3,Jake;Luke,45 mins,5
+Monday,14:23,Task 1,Jamie,102 mins,3
+WEDNESDAY,,,
+Wednesday,00:00,Task 2,Johnny;Jake;Luke;Jamie,10 mins,2
+Wednesday,5:34,Task 3,Jamie;Johnny,45 mins,5
+Wednesday,14:23,Task 1,Josie,102 mins,3
+THURSDAY,,,
+Thursday,00:00,Task 2,Jamie;Josie;Jake;Johnny,10 mins,2
+Thursday,5:34,Task 3,Josie;Jake,45 mins,5
+Thursday,14:23,Task 1,Jake;Luke;Johnny;Jamie;Josie,102 mins,3
+FRIDAY,,,
+Friday,00:00,Task 2,Jamie;Jake;Josie;Johnny,10 mins,2
+Friday,5:34,Task 3,Jake;Jamie,45 mins,5
+Friday,14:23,Task 1,Johnny,102 mins,3
+SATURDAY,,,
+Saturday,00:00,Task 2,Josie;Johnny;Jamie;Jake,10 mins,2
+Saturday,5:34,Task 3,Jake;Johnny,45 mins,5
+Saturday,14:23,Task 1,Jamie,102 mins,3
