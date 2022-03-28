@@ -4,7 +4,8 @@ import random
 DICT_DATA = "currentState.txt"
 PERSON_DATA = "People.csv"
 OUTPUT_FILE = "Schedule.csv"
-TASK_DAYS = ["Sunday","Monday","Wednesday","Thursday","Friday","Saturday"]
+TASK_FOLDER = "Tasks"
+TASK_DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 
 #Helper function for starting priorityDict fresh
 def initPDict(peopleList):
@@ -86,11 +87,12 @@ else:
 #Initialize taskDict
 taskDict = {}
 for day in TASK_DAYS:
+	filePath = os.path.join(TASK_FOLDER, day + ".csv")
 	#Assertion that the day's file exists
-	if not os.path.exists(day + ".csv"):
-		print("ERROR: It looks like the task file '" + day + ".csv' doesn't exists. Please either create the file with tasks or remove the day from the 'TASK_DAYS' variable in the Python program.")
+	if not os.path.exists(filePath):
+		print("ERROR: It looks like the task file '" + filePath + "' doesn't exists. Please either create the file with tasks or remove the day from the 'TASK_DAYS' variable in the Python program.")
 		quit()
-	with open(day + ".csv", "r") as taskFile:
+	with open(filePath, "r") as taskFile:
 		lines = [line.strip() for line in taskFile.readlines()]
 		#Remove blank/empty lines
 		while "" in lines:
@@ -99,7 +101,7 @@ for day in TASK_DAYS:
 		for line in lines:
 			#Assertion that there are 4 commas
 			if line.count(",") != 4:
-				print("ERROR: Line '" + line + "' in file '" + day + ".csv' probably isn't in the right format due to more or less than 4 commas present.")
+				print("ERROR: Line '" + line + "' in file '" + filePath + "' probably isn't in the right format due to more or less than 4 commas present.")
 				quit()
 			tasks.append(line.split(","))
 		taskDict[day] = tasks
